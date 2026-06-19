@@ -9,13 +9,15 @@ docker build -t pa-mcp -f Dockerfile .
 ```
 
 ### Install requirements for python script (for obtaining API key)
+```
 pip install -r requirements.txt
+```
 
 ### PA setup
 - Create new Admin role on PA firewall 
-  *Device > Admin Roles > Add; Enable XML API permissions needed for this integration*
+  Device > Admin Roles > Add; Enable XML API permissions needed for this integration
 - Create new API user
-  *Device > Administrators > Add; Assign the newly created API role*
+  Device > Administrators > Add; Assign the newly created API role
 - Add username, password and PA FW IP address to `.env`
 
 Generate/Refresh `PA_TOKEN` from `PA_HOST`, `PA_USERNAME`, and `PA_PASSWORD`:

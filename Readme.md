@@ -1,10 +1,37 @@
-## Build Palo Alto MCP server image and wrap it to mcpo (one time)
+### Clone repository
+```
+git clone 
+```
+
+### Build Palo Alto MCP server docker image and wrap it to mcpo
+> MCP server 'https://github.com/apius-tech/Palo-MCP' uses **stdio**
+> MCP client OpenWebUI suports **MCP Streamable HTTP** or **OpenAPI**
+> mcpo acts as a bridge
+```
 docker build -t pa-mcp -f Dockerfile .
+```
 
-## Install requirements for python
+### Install requirements for python script (for obtaining API key)
+pip install -r requirements.txt
 
+### PA setup
+- Create new Admin role on PA firewall 
+  *Devices > Admin Roles > Add; Enable all XML and REST API possibilities*
+- Create new API user
+  *Devices > Administrators > Add; Asign him newly created API role*
+- Add username, password and PA FW IP address to .env file
 
-## start Ollama server first:
+Generate/Refresh `PA_TOKEN` from `PA_HOST`, `PA_USERNAME`, and `PA_PASSWORD`:
+```
+python3 ./get_panos_api_key.py
+```
+
+### Generate random keys for OpenWebUI and MCP server and add them to .env
+- WEBUI_SECRET_KEY
+- MCPO_API_KEY
+
+### start Ollama server:
+> Open 2 terminals:
 First terminal:
 ```
 ollama serve
@@ -14,23 +41,18 @@ Second terminal:
 ollama run qwen3:4b
 ```
 
-## start containers
-
-Set these values in `.env`:
-
+### Add link to LLM model to .env
 ```
-MCPO_API_KEY=your-local-mcpo-api-key
-PANOS_HOST=your-firewall-or-panorama-ip-or-hostname
-PANOS_API_KEY=your-panos-api-key
+OLLAMA_BASE_URL=http://host.docker.internal:11434
 ```
 
-Build and start Open WebUI plus the Palo MCP proxy:
+### Spin-up Open WebUI and the Palo MCP:
 
 ```
-docker compose up -d --build
+docker compose up --build
 ```
 
-Test the MCP OpenAPI proxy from the host:
+### Test the MCP OpenAPI proxy from the host:
 
 ```
 set -a
@@ -41,7 +63,7 @@ curl http://localhost:8000/docs
 curl -H "Authorization: Bearer $MCPO_API_KEY" http://localhost:8000/openapi.json
 ```
 
-Test read-only connectivity to the configured PA device:
+### Test connectivity to the configured PA device:
 
 ```
 curl -X POST http://localhost:8000/get_firewall_info \
@@ -50,8 +72,18 @@ curl -X POST http://localhost:8000/get_firewall_info \
   -d '{}'
 ```
 
-Open WebUI can reach the Palo MCP service on the Docker network at:
+### Open ans setup OpenWebUI:
+- Open WebUI at: [[http://localhost:8080]]
+- Create account if needed (first time)
+- Add MCP: Settings > Admin Settings > Integrations > Add Connection
+  
+```
+Type: OpenAPI
+Name PA MCP
+URL: http://pa_mcp:8000
+Auth: Bearer + MCPO_API_KEY
+```
+- Verify connection
+- Save
 
-```
-http://pa_mcp:8000
-```
+- New Chat > Integrations > Tools > PA MCP enable

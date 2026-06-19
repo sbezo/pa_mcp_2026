@@ -1,11 +1,8 @@
-### Clone repository
-```
-git clone 
-```
+
 
 ### Build Palo Alto MCP server docker image and wrap it to mcpo
 > MCP server 'https://github.com/apius-tech/Palo-MCP' uses **stdio**
-> MCP client OpenWebUI suports **MCP Streamable HTTP** or **OpenAPI**
+> MCP client Open WebUI supports **MCP Streamable HTTP** or **OpenAPI**
 > mcpo acts as a bridge
 ```
 docker build -t pa-mcp -f Dockerfile .
@@ -16,10 +13,10 @@ pip install -r requirements.txt
 
 ### PA setup
 - Create new Admin role on PA firewall 
-  *Devices > Admin Roles > Add; Enable all XML and REST API possibilities*
+  *Device > Admin Roles > Add; Enable XML API permissions needed for this integration*
 - Create new API user
-  *Devices > Administrators > Add; Asign him newly created API role*
-- Add username, password and PA FW IP address to .env file
+  *Device > Administrators > Add; Assign the newly created API role*
+- Add username, password and PA FW IP address to `.env`
 
 Generate/Refresh `PA_TOKEN` from `PA_HOST`, `PA_USERNAME`, and `PA_PASSWORD`:
 ```
@@ -46,7 +43,7 @@ ollama run qwen3:4b
 OLLAMA_BASE_URL=http://host.docker.internal:11434
 ```
 
-### Spin-up Open WebUI and the Palo MCP:
+### Spin up Open WebUI and the Palo MCP:
 
 ```
 docker compose up --build
@@ -72,14 +69,14 @@ curl -X POST http://localhost:8000/get_firewall_info \
   -d '{}'
 ```
 
-### Open ans setup OpenWebUI:
+### Open and set up Open WebUI:
 - Open WebUI at: [[http://localhost:8080]]
 - Create account if needed (first time)
 - Add MCP: Settings > Admin Settings > Integrations > Add Connection
   
 ```
 Type: OpenAPI
-Name PA MCP
+Name: PA MCP
 URL: http://pa_mcp:8000
 Auth: Bearer + MCPO_API_KEY
 ```

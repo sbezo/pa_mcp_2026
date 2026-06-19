@@ -21,6 +21,4 @@ COPY --from=palo-build /opt/palo-mcp /opt/palo-mcp
 
 EXPOSE 8000
 
-ENTRYPOINT ["mcpo"]
-CMD ["sh", "-c", "exec mcpo --host 0.0.0.0 --port 8000 --api-key \"$MCPO_API_KEY\" -- node /opt/palo-mcp/dist/index.js"]
-
+CMD ["sh", "-c", ": \"${MCPO_API_KEY:?MCPO_API_KEY must be set}\"; : \"${PANOS_HOST:?PANOS_HOST must be set}\"; : \"${PANOS_API_KEY:?PANOS_API_KEY must be set}\"; exec mcpo --host 0.0.0.0 --port 8000 --api-key \"$MCPO_API_KEY\" -- node /opt/palo-mcp/dist/index.js"]

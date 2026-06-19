@@ -1,0 +1,27 @@
+---
+networks:
+  pa_mcp_network:
+    driver: bridge
+
+volumes:
+  open-webui:
+    driver: local
+
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - pa_mcp_network
+    environment:
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+    volumes:
+      - open-webui:/app/backend/data
+
+  pa_mcp:
+    image: pa-mcp
+    container_name: pa_mcp

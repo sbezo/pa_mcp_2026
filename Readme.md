@@ -5,9 +5,8 @@ Local LLM model is used.
 
 Architecture:
 
-```
-Open WebUI -> mcpo OpenAPI proxy -> Palo-MCP stdio server -> PAN-OS XML API
-```
+<img width="976" height="623" alt="image" src="https://github.com/user-attachments/assets/aafe3711-c798-4770-a5ff-0ca502650e04" />
+
 
 Main files:
 

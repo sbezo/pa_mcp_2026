@@ -1,0 +1,9 @@
+curl -X POST http://localhost:8000/get_interfaces \
+  -H "Authorization: Bearer $MCPO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{}'
+
+curl -X POST http://localhost:8000/get_security_rules \
+  -H "Authorization: Bearer $MCPO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{}'

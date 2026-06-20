@@ -1,4 +1,26 @@
+# Palo Alto MCP + Open WebUI
 
+This repository runs the [Palo-MCP](https://github.com/apius-tech/Palo-MCP) server for Palo Alto Networks PAN-OS firewalls behind an OpenAPI-compatible `mcpo` bridge, then connects it to Open WebUI through Docker Compose.
+Local LLM model is used.
+
+Architecture:
+
+```
+Open WebUI -> mcpo OpenAPI proxy -> Palo-MCP stdio server -> PAN-OS XML API
+```
+
+Main files:
+
+- `Dockerfile` builds Palo-MCP and wraps it with `mcpo`.
+- `docker-compose.yml` starts Open WebUI and the Palo MCP proxy.
+- `get_panos_api_key.py` generates and refreshes `PA_TOKEN` in `.env`.
+- `.env.example` documents required local environment variables.
+
+Environment naming:
+
+- Local `.env` uses `PA_HOST`, `PA_USERNAME`, `PA_PASSWORD`, and `PA_TOKEN`.
+- The Compose service maps `PA_HOST` and `PA_TOKEN` into the container as `PANOS_HOST` and `PANOS_API_KEY`, which Palo-MCP expects.
+- `MCPO_API_KEY` protects access to the OpenAPI proxy on port `8000`.
 
 ### Build Palo Alto MCP server docker image and wrap it to mcpo
 > MCP server 'https://github.com/apius-tech/Palo-MCP' uses **stdio**
@@ -85,4 +107,8 @@ Auth: Bearer + MCPO_API_KEY
 - Verify connection
 - Save
 
+
+### Customize new chat
 - New Chat > Integrations > Tools > PA MCP enable
+- + > Upload Files > upload agent_instructions.md
+- start chat
